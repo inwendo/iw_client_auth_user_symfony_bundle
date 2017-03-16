@@ -1,0 +1,4 @@
+services:
+    inwendo.auth.login.loginservice:
+        class:     Inwendo\Auth\LoginBundle\Tools\LoginService
+        arguments: ["@service_container"]
