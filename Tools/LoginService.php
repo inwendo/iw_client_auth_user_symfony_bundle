@@ -50,7 +50,8 @@ class LoginService
             $account->setAccessToken($loginResult->getToken());
             $account->setRefreshToken($loginResult->getRefreshToken());
 
-            $date = new \DateTime('+'.$loginResult->getExpires().' seconds');
+            $date = new \DateTime();
+            $date->setTimestamp($loginResult->getExpires());
             $account->setTokenValidUntil($date);
 
             return true;
@@ -80,7 +81,8 @@ class LoginService
 
             $account->setAccessToken($loginResult->getToken());
 
-            $date = new \DateTime('+'.$loginResult->getExpires().' seconds');
+            $date = new \DateTime();
+            $date->setTimestamp($loginResult->getExpires());
             $account->setTokenValidUntil($date);
 
             return true;
@@ -105,9 +107,13 @@ class LoginService
         if($account->hasValidToken()){
             return true;
         }elseif ($account->getRefreshToken() != null){
-            return $this->refreshLogin($provider, $account);
+            $return = $this->refreshLogin($provider, $account);
+            $this->db->getManager()->flush();
+            return $return;
         }else{
-            return $this->login($provider, $account);
+            $return = $this->login($provider, $account);
+            $this->db->getManager()->flush();
+            return $return;
         }
     }
 }
