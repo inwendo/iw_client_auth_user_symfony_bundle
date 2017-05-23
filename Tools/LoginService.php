@@ -109,11 +109,13 @@ class LoginService
         }elseif ($account->getRefreshToken() != null){
             $return = $this->refreshLogin($provider, $account);
             $this->db->getManager()->flush();
-            return $return;
-        }else{
-            $return = $this->login($provider, $account);
-            $this->db->getManager()->flush();
-            return $return;
+            if($return){
+                return $return;
+            }
         }
+        // fallback & new login
+        $return = $this->login($provider, $account);
+        $this->db->getManager()->flush();
+        return $return;
     }
 }
