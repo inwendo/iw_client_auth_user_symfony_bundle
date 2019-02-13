@@ -174,7 +174,7 @@ abstract class ServiceAccount
      */
     public function hasValidToken(){
         if($this->getTokenValidUntil() != null){
-            if($this->getTokenValidUntil() > new \DateTime()){
+            if($this->getTokenValidUntil() >= new \DateTime('+30 sec')){
                 return true;
             }
         }
